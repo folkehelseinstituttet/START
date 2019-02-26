@@ -1,0 +1,146 @@
+---
+title: "RnBeads pipeline example"
+author: "Julia Romanowska"
+date: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set( echo = TRUE )
+```
+
+# Preparations
+
+Load the libraries and set necessary variables, file paths, etc.
+
+```{r libraries,eval=FALSE}
+if ( !requireNamespace( "BiocManager", quietly = TRUE ) ){
+    install.packages("BiocManager")
+}
+BiocManager::install( "RnBeads", version = "3.8" )
+BiocManager::install( "RnBeads.hg19", version = "3.8" )
+```
+
+
+```{r setup_paths}
+suppressMessages( require( RnBeads ) )
+
+this.dir <- getwd()
+idat.dir <- file.path( this.dir, "TEST_DATA" )
+sample.annotation <- file.path( this.dir, "TEST_DATA", "sample_sheet.csv" )
+analysis.dir <- file.path( this.dir, "RnBeads_analysis" )
+report.dir <- file.path( this.dir, "RnBeads_reports2" )
+```
+
+Important parameters of the run (to see all the parameters, run `?rnb.options`):
+
+```{r setup_args}
+rnb.options(
+#  disk.dump.big.matrices = TRUE, ## to save memory
+#  disk.dump.bigff = TRUE, ## to save memory
+#  logging.disk = TRUE, ## to save memory
+#  enforce.memory.management = TRUE, ## to save memory
+  analysis.name = "CordBlood",
+  identifiers.column = "Sample_Name",
+  normalization.method = "bmiq",  ## To be discussed, but probably the best normalizing for now
+#  filtering.blacklist = "48639-non-specific-probes-Illumina450k.txt", ## CMP will provide the list 
+  filtering.greedycut.pvalue.threshold = 0.01, ## Specific value is probably ok, but should be discussed
+  filtering.sex.chromosomes.removal = FALSE,
+  exploratory = TRUE,
+  exploratory.columns = c( "Sentrix_ID","Sentrix_Position","Year","Age" ),
+  exploratory.beta.distribution = FALSE,
+  exploratory.clustering = "none",
+  min.group.size = 1, ## this is to allow for 'Age' column in exploratory analysis
+  differential = FALSE
+)
+```
+
+Why not "filtering.cross.reactive = TRUE"?
+
+## Correcting the sample annotation file
+
+There was an error when I ran the `rnb.run.analysis`, which stated:
+
+```
+2019-02-18 14:35:07     1.6  STATUS STARTED RnBeads Pipeline
+2019-02-18 14:35:07     1.6    INFO     Analysis Title: CordBlood
+2019-02-18 14:35:07     1.6    INFO     Initialized report index and saved to index.html
+2019-02-18 14:35:07     1.6  STATUS     STARTED Loading Data
+2019-02-18 14:35:07     1.6    INFO         Number of cores: 1
+2019-02-18 14:35:07     1.6    INFO         Loading data of type "idat.dir"
+2019-02-18 14:35:07     1.6  STATUS         STARTED Loading Data from IDAT Files
+2019-02-18 14:35:07     1.6    INFO             Added column barcode to the provided sample annotation table
+2019-02-18 14:35:07     1.6   ERROR             Some IDAT files are not present in the supplied base directory, for instance 201236480142_R01C01_Red.idat, 201236480142_R01C01_Grn.idat, 201236480142_R02C01_Red.idat, 201236480142_R02C01_Grn.idat, 201236480142_R03C01_Red.idat, 201236480142_R03C01_Grn.idat
+Error in logger.error(txt) : 
+  Some IDAT files are not present in the supplied base directory, for instance 201236480142_R01C01_Red.idat, 201236480142_R01C01_Grn.idat, 201236480142_R02C01_Red.idat, 201236480142_R02C01_Grn.idat, 201236480142_R03C01_Red.idat, 201236480142_R03C01_Grn.idat
+```
+
+I need to check which files are missing:
+
++ load the `sample_sheet.csv` file:
+
+```{r}
+sample.sheet <- read.csv( "TEST_DATA/sample_sheet.csv", stringsAsFactors = FALSE )
+head( sample.sheet )
+head( list.files( "TEST_DATA/" ) )
+```
+
+The filenames are constructed as follows:
+
+  - sample name
+  - sentrix ID
+  - sentrix position
+  - green or red channel
+
++ need to check which files are missing, based on the list in `sample.sheet`:
+
+```{r,eval=FALSE}
+all.possible.filenames <- with( sample.sheet,
+  paste0( rep( paste( Sample_Name, Sentrix_ID, Sentrix_Position, sep = "_" ), 2 ),
+    c( "_Grn.idat", "_Red.idat" )
+  )
+)
+existing.filenames <- list.files( "TEST_DATA/" )[ grep( ".idat", list.files( "TEST_DATA/" ), fixed = TRUE ) ]
+
+missing.filenames <- all.possible.filenames[ is.na( match( all.possible.filenames, existing.filenames ) ) ]
+```
+
+No files are missing, but the naming scheme is not the one used by default in RnBeads! Need to remove the `sample name` bit:
+
+```{r,eval=FALSE}
+new.filenames <- with( sample.sheet,
+  paste0( rep( paste( Sentrix_ID, Sentrix_Position, sep = "_" ), 2 ),
+    c( "_Grn.idat", "_Red.idat" )
+  )
+)
+setwd( "TEST_DATA/" )
+invisible( mapply( FUN = function( old.fn, new.fn ){
+  system( paste( "mv", old.fn, new.fn ) )
+}, existing.filenames, new.filenames ) )
+setwd( "../" )
+```
+
+# Running the analysis
+
+If you run on a multi-core computer with a lot of memory, you can enable parallel mode:
+```{r parallel_setup}
+logger.start( fname = NA )
+num.cores <- 8
+parallel.setup( num.cores )
+parallel.isEnabled()
+```
+
+```{r run}
+rnbset.analysed <- rnb.run.analysis(
+    dir.reports = report.dir, 
+    sample.sheet= sample.annotation, 
+    data.dir    = idat.dir, 
+    data.type   = "idat.dir" )
+
+parallel.teardown()
+```
+
