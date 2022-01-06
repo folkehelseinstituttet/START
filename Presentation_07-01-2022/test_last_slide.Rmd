@@ -1,0 +1,127 @@
+---
+title: "START Xchrom analysis"
+subtitle: "what we found this far"
+author: "Julia Romanowska"
+date: 'January 7, 2022'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r knitr_setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  dpi = 150
+)
+```
+
+```{r data_setup, include=FALSE}
+library(fontawesome)
+library(tidyverse)
+library(patchwork)
+# library(karyoploteR) # <- I'm using their functions, but explicitly since
+                       # there was some crash of these functions with another pkg
+library(sanzo)
+library(ggrepel)
+library(UpSetR)
+
+signif_pval_thresh <- 0.05
+dmr_signif_pval_thresh <- 0.01
+dmr_min_n_cpgs <- 3
+
+data_folder <- file.path("/home", "jro049", "Naukowe", "START_project",
+                         "X-chrom", "DATA")
+source(file.path("/home", "jro049", "Naukowe", "START_project",
+                         "X-chrom", "gg_qqplot.R"))
+
+# here are the model names as they appear in the raw data,
+#  the order signifies the number of model in the final data presentation
+all_model_names <- c("1c", "parents.1c", "1d.bw", "parents.1d.bw")
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+# setting up extra features:
+library(xaringanExtra)
+use_scribble()
+use_tachyons()
+use_fit_screen()
+
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#1381B0",
+  secondary_color = "#FF961C",
+  inverse_header_color = "#FFFFFF"
+)
+```
+
+<!-- - why are there many more DMRs found in girls-only analyses? -->
+
+**Who wants to be on the author list?**
+
+<div style="float: right; display: inline; font-size: small;">
+
+<p style="font-style: bold;"> LEGEND:</p>
+
+<table style="width: 250px; right: 50px;">
+  <tr>
+    <th>symbol</th>
+    <th style="border-left: 1px solid black;">responsibilities</th>
+  </tr>
+  <tr>
+    <td style="text-align: center;">`r fa("child")`</td><td>playing with data</td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">`r fa("user-md")`</td><td>contribute to discussion; biological expertise</td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">`r fa("user-secret")`</td><td>checking literature, making text shine</td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">`r fa("user-graduate")`</td><td>supervision</td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">`r fa("user-astronaut")`</td><td>suddenly appearing and asking <i>the most difficult question</i></td>
+  </tr>
+  <tr>
+    <td style="text-align: center;">`r fa("user-friends")`</td><td>friendly reviewing the bioinf. approach and implementation</td>
+  </tr>
+</table>
+
+</div>
+
+<br>
+currently:
+
+- `r fa("child")` *Julia Romanowska*,
+
+- `r fa("child")` *Haakon E. Nustad*,
+
+- `r fa("user-friends")` *Christian M. Page*,
+
+- `r fa("user-friends")` *William R.P. Denault*,
+
+- `r fa("user-friends")` *Jon Bohlin*,
+
+- `r fa("user-friends")` *Yunsung Lee*,
+
+- `r fa("user-md")` *Maria C. Magnus*,
+
+- `r fa("user-astronaut")` *Håkon K. Gjessing*,
+
+- `r fa("user-md")` *Robert Lyle*,
+
+- `r fa("user-graduate")` *Per Magnus*,
+
+- `r fa("user-graduate")` *Siri E. Håberg*,
+
+- `r fa("user-secret")` *Astanand Jugessur*
+
