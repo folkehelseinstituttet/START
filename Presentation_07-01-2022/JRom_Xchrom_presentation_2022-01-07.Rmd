@@ -558,19 +558,6 @@ signif_DMR_4plotting <- map(
     col = model, into = c("gender", "model_name"), sep = "\\.", extra = "merge"
   )
 
-# read in gene region info
-dmr_genes_regs <- readRDS(file.path(data_folder, "DMR_genes.rds"))
-chosen_dmr_genes_regs <- dmr_genes_regs[c("Boys.1c", "Girls.1c")]
- # concatenating GRanges is only possible when the list is not named!
-names(chosen_dmr_genes_regs) <- NULL
-plot_dmr_data_genes <- do.call(
-  c,
-  map(chosen_dmr_genes_regs, function(y){
-    pluck(unlist(y), "genes")
-  })
-)
-
-# read in regulatory regions found for any of the significant hits
 returnNonOverlaps <- function(x, y){
   # x, y - GRanges
   which_overlap <- GenomicRanges::findOverlaps(x, y, select = "last", ignore.strand = TRUE)
@@ -582,6 +569,24 @@ returnNonOverlaps <- function(x, y){
     GenomicRanges::sort(c(x, y))
   )
 }
+
+# read in gene region info
+dmr_genes_regs <- readRDS(file.path(data_folder, "DMR_genes.rds"))
+chosen_dmr_genes_regs <- dmr_genes_regs[c("Boys.1c", "Girls.1c")]
+ # concatenating GRanges is only possible when the list is not named!
+names(chosen_dmr_genes_regs) <- NULL
+plot_dmr_data_genes <- Reduce(
+  returnNonOverlaps,
+  unlist(
+    map(chosen_dmr_genes_regs, function(y){
+      map(y, function(z){
+        pluck(z, "genes")
+      })
+    })
+  )
+)
+
+# read in regulatory regions found for any of the significant hits
 dmr_regulatory_regs <- readRDS(file.path(data_folder, "DMR_regul_regs.rds"))
 plot_dmr_regulatory_reg <- dmr_regulatory_regs[c("Boys.1c", "Girls.1c")]
 names(plot_dmr_regulatory_reg) <- NULL
@@ -773,11 +778,12 @@ karyoploteR::kpPlotMarkers(
   kp, data = plot_dmr_data_genes,
   labels = plot_dmr_data_genes$name,
   data.panel = 2, r0 = 0, r1 = 0.55,
-  text.orientation = "horizontal",
+  # text.orientation = "horizontal",
   label.dist = 0.01,
   label.margin = 1,
   pos = 2,
   offset = 0.05,
+  cex = 0.7,
   lwd = 1.5,
   line.color = "gray60",
   ignore.chromosome.ends = TRUE,
@@ -1172,7 +1178,6 @@ class: top, center
 
 </div>
 
-<br>
 currently:
 
 - `r fa("child")` *Julia Romanowska*,
