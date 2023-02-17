@@ -1,0 +1,442 @@
+---
+title: "START meQTL analysis"
+subtitle: "fresh look at the results"
+author: "Julia Romanowska"
+date: 'March 19, 2021'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = TRUE, echo = FALSE, dpi = 150, cache.lazy = FALSE, out.height = "500px")
+
+library(fontawesome)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(UpSetR)
+library(purrr)
+
+# setting up extra features:
+library(xaringanExtra)
+use_scribble()
+use_tachyons()
+# use_webcam()
+use_fit_screen()
+use_panelset()
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#1381B0",
+  secondary_color = "#FF961C",
+  inverse_header_color = "#FFFFFF"
+)
+```
+
+```{r read_data, include=FALSE, warning=FALSE}
+all_subsets <- c("CNTRL_PARENTS",
+                 "CNTRL_CHILDREN",
+                 "ART_PARENTS",
+                 "ART_CHILDREN")
+load("~/Naukowe/START_project/meQTLs_ART/comparison_processes_results.RData")
+# this loads: cpg.map.all,
+  # snp.map.all,
+  # n_results,
+  # cis_list_input,
+  # trans_list_input,
+  # stats_per_chrom,
+  # stats_per_chrom_sep
+top_trans_hits <- readRDS("~/Naukowe/START_project/meQTLs_ART/top_trans_hits.rds")
+```
+
+
+background-image: url(https://images.unsplash.com/photo-1613987549117-13c4781b32d3)
+background-size: cover
+
+class: center, middle, inverse
+
+.avenir.f1[
+ START meQTL analyses
+]
+## _a fresh look at the results_
+
+<br>
+## _Julia Romanowska_
+
+<br>
+March 19, 2021
+
+???
+
+Image credit: [Photo by Milana Jovanov on Unsplash](https://unsplash.com/photos/s1xR3R7Q_H4)
+
+---
+class: inverse, left, bottom
+
+# OUTLINE
+
+## `r fa("microscope")` meQTLs
+
+## `r fa("laptop-code")` methods
+
+## `r fa("paint-brush")` some results
+
+## `r fa("question-circle")` discussion
+
+---
+
+# `r fa("microscope")` meQTL
+
+.b--gold.bg-light-yellow.ba.bw2.br3.shadow-5.ph4.mt5.tc[
+methylation quantitative trait locus
+
+SNP--CpG pair
+]
+
+- _cis_-meQTLs and _trans_-meQTLs
+
+- indicating a functional connection between    
+_methylation_ status of that CpG and    
+_allele_ at that SNP
+
+---
+
+# `r fa("laptop-code")` methods
+## `r fa("database")` data
+
+- **genetic data** - MoBa 1.0 - _only genotyped SNPs!_
+
+- **epigenetic data** - START
+
+- _script and neat R-table that matches the individuals!_
+
+???
+
+Matching those was a horror!
+
+--
+
+## `r fa("tools")` tools
+
+- `PLINK`
+
+- `R` (`MatrixEQTL` package)
+
+---
+
+## Aim
+
+.b--gold.bg-light-yellow.ba.bw2.br3.shadow-5.ph4.mt5.tc[
+to find meQTLs in each of the sample subsets
+
+and compare
+]
+
+
+---
+
+class: inverse, left, middle
+
+# `r fa("paint-brush")` some results
+
+---
+
+**Overview of results**
+
+For each of the subsets, there is the following number of results that reach significance
+level FDR < 0.05:
+
+```{r, fig.height = 8, fig.width = 6}
+# knitr::kable(n_results)
+n_res_4plotting <- n_results %>%
+  pivot_longer(cols = starts_with("n_"), names_to = "feature", values_to = "n")
+ggplot(n_res_4plotting %>%
+         filter(feature %in% c("n_trans_005FDR", "n_cis_005FDR")),
+       aes(name, n)) +
+  geom_col(aes(fill = feature)) +
+  scale_fill_manual(
+    name = "meQTL type",
+    labels = c("cis", "trans"),
+    values = sanzo::sanzo.duo("c006")
+  ) +
+  labs(
+    title = "Total number of significant meQTLs",
+    subtitle = "(FDR < 0.05)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    text = element_text(size = 14),
+    axis.text.x = element_text(angle = -45)
+  )
+```
+
+---
+
+Each SNP and each CpG has on average so many connections:
+
+```{r avg_connections, fig.height = 8, fig.width = 6}
+avg_connections <- n_results %>%
+    mutate(avg_connect_snp_cis = n_cpgs_cis / n_snps_cis,
+           avg_connect_snp_trans = n_cpgs_trans / n_snps_trans,
+           avg_connect_cpg_cis = n_snps_cis / n_cpgs_cis,
+           avg_connect_cpg_trans = n_snps_trans / n_cpgs_trans) %>%
+    select(-starts_with("n_")) %>%
+  pivot_longer(cols = starts_with("avg_"),
+               names_to = "feature",
+               values_to = "n")
+
+ggplot(avg_connections,
+       aes(name, n)) +
+  geom_col(aes(fill = feature), position = position_dodge()) +
+  scale_fill_manual(
+    name = "type",
+    labels = c("SNP in cis", "SNP in trans", "CpG in cis", "CpG in trans"),
+    values = sanzo::sanzo.quad("c263")
+  ) +
+  labs(
+    title = "Average number of meQTLs per SNP or CpG",
+    subtitle = "(FDR < 0.05)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    text = element_text(size = 14),
+    axis.text.x = element_text(angle = -45)
+  )
+```
+
+---
+
+**Stats per chromosome**
+
+```{r read_mapping}
+orig.snps.per.chrom <- snp.map.all %>%
+  count(snp_chrom) %>%
+  rename(chrom = snp_chrom)
+
+orig.cpgs.per.chrom <- cpg.map.all %>%
+  mutate(chrom = as.numeric(cpg_chrom)) %>%
+  count(chrom) %>%
+  arrange(chrom)
+```
+
+Total number of _cis_-meQTLs per chromosome (FDR < 0.05).
+
+```{r plot_per_chrom, fig.height = 8, fig.width = 8}
+ggplot(stats_per_chrom, aes(as.factor(snp_chrom), n)) +
+  geom_col() +
+  facet_grid(rows = vars(name), scales = "free_y") +
+  xlab("chromosome") + ylab("no. meQTLs") +
+  theme_minimal() +
+  labs(title = "Total number of cis-meQTLs per chromosome") +
+  theme(text = element_text(size = 14))
+```
+
+---
+
+**distinct SNPs and CpGs involved in meQTLs**
+
+```{r plot_per_chrom_sep, fig.height=8, fig.width = 8}
+ggplot(stats_per_chrom_sep, aes(as.factor(chrom), n)) +
+  geom_col(aes(fill = type), position = position_dodge()) +
+  scale_fill_manual(
+    name = "type",
+    labels = c("CpGs", "SNPs"),
+    values = sanzo::sanzo.duo("c006")
+  ) +
+  facet_grid(rows = vars(name), scales = "free_y") +
+  xlab("chromosome") + ylab("number of SNPs or CpGs") +
+  theme_minimal() +
+  labs(title = "Number of SNPs and CpGs involved in cis-meQTLs") +
+  theme(text = element_text(size = 14))
+```
+
+
+```{r plot_per_chrom_sep_prcnt, fig.height=8, eval = FALSE}
+ggplot(stats_per_chrom_sep, aes(as.factor(chrom), n_prcnt)) +
+  geom_col(aes(fill = type), position = position_dodge()) +
+  scale_fill_manual(
+    name = "type",
+    labels = c("CpGs", "SNPs"),
+    values = sanzo::sanzo.duo("c006")
+  ) +
+  facet_grid(rows = vars(name), scales = "free_y") +
+  xlab("chromosome") + ylab("% SNPs or CpGs") +
+  theme_minimal()+
+  labs(title = "Percentage of SNPs and CpGs involved in cis-meQTLs")
+```
+
+---
+
+**cis-meQTLs**
+
+```{r plot_upsetr, fig.height = 6, fig.width = 8, fig.cap="How many cis-meQTLs are shared between the sample sets?"}
+upset(fromList(cis_list_input), order.by = "freq", text.scale = 1.5)
+```
+
+---
+
+**trans-meQTLs**
+
+```{r plot_upsetr_trans, fig.height = 6, fig.width = 8, fig.cap="How many trans-meQTLs are shared between the sample sets?"}
+upset(fromList(trans_list_input), order.by = "freq", text.scale = 1.5)
+```
+
+---
+---
+
+**trans-meQTLs - ctnd**
+
+.panelset[
+.panel[.panel-name[CNTRL_PARENTS]
+
+```{r panel-chunk, fig.height = 6, fig.width = 8}
+subset <- "CNTRL_PARENTS"
+  cur_data <- top_trans_hits[[subset]]
+  cur_data <- cur_data %>%
+    filter(FDR == min(cur_data$FDR))
+  
+  cur_data_alluvial <- cur_data %>%
+    filter(!is.na(snp_chrom)) %>%
+    mutate(cpg_chrom = as.numeric(cpg_chrom)) %>%
+    count(snp_chrom, cpg_chrom)
+  
+ggplot(cur_data_alluvial,
+         aes(x = as.factor(cpg_chrom), y = as.factor(snp_chrom))) +
+    geom_raster(aes(fill = n)) +
+    scale_fill_continuous("# connections") +
+    coord_fixed() +
+    theme_minimal() +
+    labs(
+      title = "Chromosome locations of most significant trans-meQTL",
+      subtitle = paste0("(data from ", subset, " subset)")
+    ) +
+    xlab("chromosome location of CpG") +
+    ylab("chromosome location of SNP") +
+  theme(text = element_text(size = 14))
+```
+]
+
+
+.panel[.panel-name[ART_PARENTS]
+
+```{r panel-chunk_art_parents, fig.height = 6, fig.width = 8}
+subset <- "ART_PARENTS"
+  cur_data <- top_trans_hits[[subset]]
+  cur_data <- cur_data %>%
+    filter(FDR == min(cur_data$FDR))
+
+  cur_data_alluvial <- cur_data %>%
+    filter(!is.na(snp_chrom)) %>%
+    mutate(cpg_chrom = as.numeric(cpg_chrom)) %>%
+    count(snp_chrom, cpg_chrom)
+  
+ggplot(cur_data_alluvial,
+         aes(x = as.factor(cpg_chrom), y = as.factor(snp_chrom))) +
+    geom_raster(aes(fill = n)) +
+    scale_fill_continuous("# connections") +
+    coord_fixed() +
+    theme_minimal() +
+    labs(
+      title = "Chromosome locations of most significant trans-meQTL",
+      subtitle = paste0("(data from ", subset, " subset)")
+    ) +
+    xlab("chromosome location of CpG") +
+    ylab("chromosome location of SNP") +
+  theme(text = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[CNTRL_CHILDREN]
+
+```{r panel-chunk_cntrl_children, fig.height = 6, fig.width = 8}
+subset <- "CNTRL_CHILDREN"
+  cur_data <- top_trans_hits[[subset]]
+  cur_data <- cur_data %>%
+    filter(FDR == min(cur_data$FDR))
+  
+  cur_data_alluvial <- cur_data %>%
+    filter(!is.na(snp_chrom)) %>%
+    mutate(cpg_chrom = as.numeric(cpg_chrom)) %>%
+    count(snp_chrom, cpg_chrom)
+  
+ggplot(cur_data_alluvial,
+         aes(x = as.factor(cpg_chrom), y = as.factor(snp_chrom))) +
+    geom_raster(aes(fill = n)) +
+    scale_fill_continuous("# connections") +
+    coord_fixed() +
+    theme_minimal() +
+    labs(
+      title = "Chromosome locations of most significant trans-meQTL",
+      subtitle = paste0("(data from ", subset, " subset)")
+    ) +
+    xlab("chromosome location of CpG") +
+    ylab("chromosome location of SNP") +
+  theme(text = element_text(size = 14))
+```
+]
+
+.panel[.panel-name[ART_CHILDREN]
+
+```{r panel-chunk_art_children, fig.height = 6, fig.width = 8}
+subset <- "ART_CHILDREN"
+  cur_data <- top_trans_hits[[subset]]
+  cur_data <- cur_data %>%
+    filter(FDR == min(cur_data$FDR))
+  
+  cur_data_alluvial <- cur_data %>%
+    filter(!is.na(snp_chrom)) %>%
+    mutate(cpg_chrom = as.numeric(cpg_chrom)) %>%
+    count(snp_chrom, cpg_chrom)
+  
+ggplot(cur_data_alluvial,
+         aes(x = as.factor(cpg_chrom), y = as.factor(snp_chrom))) +
+    geom_raster(aes(fill = n)) +
+    scale_fill_continuous("# connections") +
+    coord_fixed() +
+    theme_minimal() +
+    labs(
+      title = "Chromosome locations of most significant trans-meQTL",
+      subtitle = paste0("(data from ", subset, " subset)")
+    ) +
+    xlab("chromosome location of CpG") +
+    ylab("chromosome location of SNP") +
+  theme(text = element_text(size = 14))
+```
+]
+]
+
+---
+
+## `r fa("clipboard-check")` TODO
+
+- map CpGs and SNPs to genomic annotations
+
+- check where are the biggest differences between each pair:
+
+    - among ART: children vs. parents
+    - among controls: children vs. parents
+    - among children: ART vs. controls
+    - among parents: ART vs. controls
+
+- pick the most interesting meQTLs!
+
+- how to visualize?
+
+---
+
+class: inverse, left, middle
+
+## `r fa("question-circle")` discussion
