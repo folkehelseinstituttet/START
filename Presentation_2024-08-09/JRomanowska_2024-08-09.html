@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="JRomanowska_2024-08-09_files/libs/clipboard/clipboard.min.js"></script>
+<script src="JRomanowska_2024-08-09_files/libs/quarto-html/tabby.min.js"></script>
+<script src="JRomanowska_2024-08-09_files/libs/quarto-html/popper.min.js"></script>
+<script src="JRomanowska_2024-08-09_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="JRomanowska_2024-08-09_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="JRomanowska_2024-08-09_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="JRomanowska_2024-08-09_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="JRomanowska_2024-08-09_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.5.56">
+
+  <meta name="author" content="Julia Romanowska">
+  <meta name="dcterms.date" content="2024-08-09">
+  <title>mQTLs in ART</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="JRomanowska_2024-08-09_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="JRomanowska_2024-08-09_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="JRomanowska_2024-08-09_files/libs/revealjs/dist/theme/quarto.css">
+  <link rel="stylesheet" href="extra.css">
+  <link href="JRomanowska_2024-08-09_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="JRomanowska_2024-08-09_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="JRomanowska_2024-08-09_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="JRomanowska_2024-08-09_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link href="JRomanowska_2024-08-09_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+  <script src="JRomanowska_2024-08-09_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/d3-bundle-5.16.0/d3-bundle.min.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/d3-lasso-0.0.5/d3-lasso.min.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/save-svg-as-png-1.4.17/save-svg-as-png.min.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/flatbush-4.4.0/flatbush.min.js"></script>
+  <link href="JRomanowska_2024-08-09_files/libs/ggiraphjs-0.8.10/ggiraphjs.min.css" rel="stylesheet">
+  <script src="JRomanowska_2024-08-09_files/libs/ggiraphjs-0.8.10/ggiraphjs.min.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/girafe-binding-0.8.10/girafe.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="figs/sergei-gussev-MFPrDj-9czI-unsplash.jpg" data-background-opacity="0.5" data-background-size="stretch" class="center">
+<div class="left-column-title-slide">
+  <h1 class="title">mQTLs in ART</h1>
+  <p class="title">parents vs children</p>
+<br>
+<br>
+<br>
+  <p class="author">Julia Romanowska</p>
+  <p class="date">2024-08-09</p>
+</div>
+
+<p style="position: absolute; bottom: 1px; right: 1px; font-size: small;">
+Photo by <a href="https://unsplash.com/@sergei_gussev?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash">Sergei Gussev</a> on <a href="https://unsplash.com/photos/a-roller-coaster-going-down-a-hill-at-sunset-MFPrDj-9czI?utm_content=creditCopyText&amp;utm_medium=referral&amp;utm_source=unsplash">Unsplash</a>
+</p>
+</section>
+<section id="outline" class="slide level2">
+<h2>OUTLINE</h2>
+<h3 id="mqtls"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M160 32c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32zM32 448H320c70.7 0 128-57.3 128-128s-57.3-128-128-128V128c106 0 192 86 192 192c0 49.2-18.5 94-48.9 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 32c-17.7 0-32-14.3-32-32s14.3-32 32-32zm80-64H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"></path></svg> mQTLs</h3>
+<h3 id="dnam-reprogramming"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M160 32c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32zM32 448H320c70.7 0 128-57.3 128-128s-57.3-128-128-128V128c106 0 192 86 192 192c0 49.2-18.5 94-48.9 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 32c-17.7 0-32-14.3-32-32s14.3-32 32-32zm80-64H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"></path></svg> DNAm reprogramming</h3>
+<h3 id="methods"><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> methods</h3>
+<h3 id="some-results"><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M339.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L568.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S517.7-4.4 499.1 9.6L262.4 187.2c-24 18-38.2 46.1-38.4 76.1L339.3 367.1zm-19.6 25.4l-116-104.4C143.9 290.3 96 339.6 96 400c0 3.9 .2 7.8 .6 11.6C98.4 429.1 86.4 448 68.8 448H64c-17.7 0-32 14.3-32 32s14.3 32 32 32H208c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"></path></svg> some results</h3>
+<h3 id="discussion"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"></path></svg> discussion</h3>
+</section>
+<section id="mqtl" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M160 32c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32zM32 448H320c70.7 0 128-57.3 128-128s-57.3-128-128-128V128c106 0 192 86 192 192c0 49.2-18.5 94-48.9 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 32c-17.7 0-32-14.3-32-32s14.3-32 32-32zm80-64H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"></path></svg> mQTL</h2>
+<div class="center-box">
+<p>SNP–CpG pair</p>
+</div>
+<ul>
+<li><p><em>cis</em>-mQTLs and <em>trans</em>-mQTLs</p></li>
+<li><p>indicating a functional connection between<br>
+<em>methylation</em> status of that CpG and<br>
+<em>allele</em> at that SNP</p></li>
+</ul>
+</section>
+<section id="dnam-reprogramming-1" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M160 32c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32zM32 448H320c70.7 0 128-57.3 128-128s-57.3-128-128-128V128c106 0 192 86 192 192c0 49.2-18.5 94-48.9 128H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 32c-17.7 0-32-14.3-32-32s14.3-32 32-32zm80-64H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"></path></svg> DNAm reprogramming</h2>
+<div class="center-box">
+<p>wave of demethylation followed by rapid re-methylation</p>
+</div>
+<ul>
+<li><p>paternal DNA is <em>demethylated</em> faster than maternal</p></li>
+<li><p>at <strong>blastocyst</strong> stage, DNAm level is lowest (ca.20% of all CpGs)</p></li>
+<li><p>freezing of eggs could influence de-methylation and differentiation</p></li>
+</ul>
+<p style="position: absolute; font-size: small; bottom: 10px; left: 5px;">
+[src: Albert and Greenberg, Development (2023); Greenberg, Front.Cell Develop.Biol. (2021)]
+</p>
+<aside class="notes">
+<p>Blastocyst = naive pluripotency stage; only imprinted regions and <em>transpose elements</em> (TEs) are methylated!</p>
+<p>However, a lot of signalling is also done by methylation of histones!</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="aim" class="slide level2">
+<h2>Aim</h2>
+<div class="center-box">
+<p><em>to check for differences in existence of mQTLs</em> between:</p>
+</div>
+<ul>
+<li><p>parents <em>vs</em> children</p></li>
+<li><p>ART <em>vs</em> non-ART</p></li>
+</ul>
+</section>
+<section id="methods-1" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> methods</h2>
+<h3 id="data"><svg aria-hidden="true" role="img" viewbox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M448 80v48c0 44.2-100.3 80-224 80S0 172.2 0 128V80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6V288c0 44.2-100.3 80-224 80S0 332.2 0 288V186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6V432c0 44.2-100.3 80-224 80S0 476.2 0 432V346.1z"></path></svg> data</h3>
+<ul>
+<li><p><strong>genetic data</strong> - MoBa</p></li>
+<li><p><strong>epigenetic data</strong> - START</p></li>
+</ul>
+
+<img data-src="JRomanowska_2024-08-09_files/figure-revealjs/samples_final-1.png" alt="Boxplot showing that number of samples available in each category is comparable: 819 non-ART mothers, 779 ART mothers, 808 non-ART fathers, 784 ART fathers, 911 non-ART children, and 847 ART children." width="960" class="r-stretch"></section>
+<section id="methods-2" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> methods</h2>
+<h3 id="tools"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4h54.1l109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109V104c0-7.5-3.5-14.5-9.4-19L78.6 5zM19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L233.7 374.3c-7.8-20.9-9-43.6-3.6-65.1l-61.7-61.7L19.9 396.1zM512 144c0-10.5-1.1-20.7-3.2-30.5c-2.4-11.2-16.1-14.1-24.2-6l-63.9 63.9c-3 3-7.1 4.7-11.3 4.7H352c-8.8 0-16-7.2-16-16V102.6c0-4.2 1.7-8.3 4.7-11.3l63.9-63.9c8.1-8.1 5.2-21.8-6-24.2C388.7 1.1 378.5 0 368 0C288.5 0 224 64.5 224 144l0 .8 85.3 85.3c36-9.1 75.8 .5 104 28.7L429 274.5c49-23 83-72.8 83-130.5zM56 432a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"></path></svg> tools</h3>
+<ul>
+<li><p><code>PLINK</code></p></li>
+<li><p><svg aria-hidden="true" role="img" viewbox="0 0 581 512" style="height:1em;width:1.13em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"></path></svg> (<code>MatrixEQTL</code> package)</p></li>
+<li><p><code>snakemake</code></p></li>
+</ul>
+<aside class="notes">
+<ul>
+<li><code>JuliaLang</code></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="methods-3" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 640 512" style="height:1em;width:1.25em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M64 96c0-35.3 28.7-64 64-64H512c35.3 0 64 28.7 64 64V352H512V96H128V352H64V96zM0 403.2C0 392.6 8.6 384 19.2 384H620.8c10.6 0 19.2 8.6 19.2 19.2c0 42.4-34.4 76.8-76.8 76.8H76.8C34.4 480 0 445.6 0 403.2zM281 209l-31 31 31 31c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-48-48c-9.4-9.4-9.4-24.6 0-33.9l48-48c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9zM393 175l48 48c9.4 9.4 9.4 24.6 0 33.9l-48 48c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l31-31-31-31c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg> methods</h2>
+<ol type="1">
+<li><p>agnostic search for mQTLs <em>in parents</em></p></li>
+<li><p>select the significant mQTLs</p></li>
+<li><p>check for association <em>in children</em><br>
+using two models:</p></li>
+</ol>
+<ul>
+<li>DNAm <span class="math inline">\(\sim\)</span> SNP <span class="math inline">\(+\)</span> case_control_status</li>
+<li>DNAm <span class="math inline">\(\sim\)</span> SNP <span class="math inline">\(\times\)</span> case_control_status</li>
+</ul>
+</section>
+<section>
+<section id="results" class="title-slide slide level1 center">
+<h1><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zm-312 8v64c0 13.3 10.7 24 24 24s24-10.7 24-24l0-64c0-13.3-10.7-24-24-24s-24 10.7-24 24zm80-96V280c0 13.3 10.7 24 24 24s24-10.7 24-24V120c0-13.3-10.7-24-24-24s-24 10.7-24 24zm80 64v96c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path></svg> Results</h1>
+<div style="font-size: 1.2em; font-weight: bold;">
+<p><em>mQTLs in parents</em></p>
+</div>
+</section>
+<section id="how-many-mqtl-pairs" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 384 512" style="height:1em;width:0.75em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"></path></svg> How many mQTL pairs?</h2>
+<blockquote>
+<p><em>for chromosome 20 only!</em></p>
+</blockquote>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;"># tests</th>
+<th style="text-align: right;"># all mQTLs</th>
+<th style="text-align: right;"># signif mQTLs[*]</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">cis</td>
+<td style="text-align: right;">107225852</td>
+<td style="text-align: right;">107225852</td>
+<td style="text-align: right;">6175</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">trans</td>
+<td style="text-align: right;">3191581264</td>
+<td style="text-align: right;">256233</td>
+<td style="text-align: right;">9105</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<aside><div>
+<p>[*] significance for <em>cis</em> based on FDR, for <em>trans</em>, based on Bonferroni</p>
+</div></aside></section>
+<section id="where-are-the-significant-mqtl-pairs" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M256 0c17.7 0 32 14.3 32 32V66.7C368.4 80.1 431.9 143.6 445.3 224H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H445.3C431.9 368.4 368.4 431.9 288 445.3V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.3C143.6 431.9 80.1 368.4 66.7 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H66.7C80.1 143.6 143.6 80.1 224 66.7V32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"></path></svg> Where are the significant mQTL pairs?</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Genomic position</a></li><li><a href="#tabset-1-2">Relative distance</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="JRomanowska_2024-08-09_files/figure-revealjs/plot_position-1.png" style="width:110.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="JRomanowska_2024-08-09_files/figure-revealjs/unnamed-chunk-5-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="how-many-connections" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M418.4 157.9c35.3-8.3 61.6-40 61.6-77.9c0-44.2-35.8-80-80-80c-43.4 0-78.7 34.5-80 77.5L136.2 151.1C121.7 136.8 101.9 128 80 128c-44.2 0-80 35.8-80 80s35.8 80 80 80c12.2 0 23.8-2.7 34.1-7.6L259.7 407.8c-2.4 7.6-3.7 15.8-3.7 24.2c0 44.2 35.8 80 80 80s80-35.8 80-80c0-27.7-14-52.1-35.4-66.4l37.8-207.7zM156.3 232.2c2.2-6.9 3.5-14.2 3.7-21.7l183.8-73.5c3.6 3.5 7.4 6.7 11.6 9.5L317.6 354.1c-5.5 1.3-10.8 3.1-15.8 5.5L156.3 232.2z"></path></svg> How many connections?</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Per SNP</a></li><li><a href="#tabset-2-2">Per CpG</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div class="cell">
+<div class="cell-output-display">
+<div class="girafe html-widget html-fill-item" id="htmlwidget-39511acf20db24aeb285" style="width:110%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-39511acf20db24aeb285">{"x":{"html":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='ggiraph-svg' role='graphics-document' id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a' viewBox='0 0 720 360'>\n <defs id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_defs'>\n  <clipPath id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_c1'>\n   <rect x='0' y='0' width='720' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_c2'>\n   <rect x='146.84' y='0' width='426.32' height='360'/>\n  <\/clipPath>\n  <clipPath id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_c3'>\n   <rect x='199.87' y='23.32' width='294.78' height='304.97'/>\n  <\/clipPath>\n <\/defs>\n <g id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_rootg' class='ggiraph-svg-rootg'>\n  <g clip-path='url(#svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_c1)'>\n   <rect x='0' y='0' width='720' height='360' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round' class='ggiraph-svg-bg'/>\n  <\/g>\n  <g clip-path='url(#svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_c3)'>\n   <polyline points='199.87,288.04 494.65,288.04' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='199.87,198.08 494.65,198.08' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='199.87,108.13 494.65,108.13' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='234.15,328.29 234.15,23.32' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='324.11,328.29 324.11,23.32' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='414.06,328.29 414.06,23.32' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='199.87,243.06 494.65,243.06' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='199.87,153.11 494.65,153.11' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='199.87,63.16 494.65,63.16' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='279.13,328.29 279.13,23.32' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='369.08,328.29 369.08,23.32' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='459.03,328.29 459.03,23.32' fill='none' stroke='#EBEBEB' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='butt'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e1' cx='213.27' cy='314.43' r='1.87pt' fill='#193854' fill-opacity='1' stroke='none' title='SNP: rs75912699;&amp;lt;br/&amp;gt; CpG: cg26824325'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e2' cx='213.27' cy='301.22' r='1.87pt' fill='#152F49' fill-opacity='1' stroke='none' title='SNP: rs75912699;&amp;lt;br/&amp;gt; CpG: cg03595951'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e3' cx='213.27' cy='301.17' r='1.87pt' fill='#275278' fill-opacity='1' stroke='none' title='SNP: rs75912699;&amp;lt;br/&amp;gt; CpG: cg12512053'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e4' cx='213.27' cy='300.96' r='1.87pt' fill='#18344F' fill-opacity='1' stroke='none' title='SNP: rs75912699;&amp;lt;br/&amp;gt; CpG: cg20618996'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e5' cx='233.95' cy='297.03' r='1.87pt' fill='#3D7FB4' fill-opacity='1' stroke='none' title='SNP: rs373775601;&amp;lt;br/&amp;gt; CpG: cg20564458'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e6' cx='233.95' cy='297.03' r='1.87pt' fill='#3874A5' fill-opacity='1' stroke='none' title='SNP: rs373775601;&amp;lt;br/&amp;gt; CpG: cg05298461'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e7' cx='233.95' cy='295.31' r='1.87pt' fill='#1A3855' fill-opacity='1' stroke='none' title='SNP: rs373775601;&amp;lt;br/&amp;gt; CpG: cg22433521'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e8' cx='233.95' cy='287.06' r='1.87pt' fill='#265075' fill-opacity='1' stroke='none' title='SNP: rs373775601;&amp;lt;br/&amp;gt; CpG: cg02335030'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e9' cx='319.12' cy='207.47' r='1.87pt' fill='#132B43' fill-opacity='1' stroke='none' title='SNP: rs113035198;&amp;lt;br/&amp;gt; CpG: cg22984938'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e10' cx='319.12' cy='200.12' r='1.87pt' fill='#22496B' fill-opacity='1' stroke='none' title='SNP: rs113035198;&amp;lt;br/&amp;gt; CpG: cg12611551'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e11' cx='319.12' cy='197.77' r='1.87pt' fill='#3671A1' fill-opacity='1' stroke='none' title='SNP: rs113035198;&amp;lt;br/&amp;gt; CpG: cg05913229'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e12' cx='319.12' cy='196.18' r='1.87pt' fill='#204566' fill-opacity='1' stroke='none' title='SNP: rs113035198;&amp;lt;br/&amp;gt; CpG: cg12127137'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e13' cx='431.67' cy='96.5' r='1.87pt' fill='#4792CE' fill-opacity='1' stroke='none' title='SNP: rs142445519;&amp;lt;br/&amp;gt; CpG: cg17414900'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e14' cx='431.67' cy='96.5' r='1.87pt' fill='#448DC7' fill-opacity='1' stroke='none' title='SNP: rs142445519;&amp;lt;br/&amp;gt; CpG: cg01595162'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e15' cx='431.67' cy='92.8' r='1.87pt' fill='#204567' fill-opacity='1' stroke='none' title='SNP: rs142445519;&amp;lt;br/&amp;gt; CpG: cg14417820'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e16' cx='431.67' cy='91.51' r='1.87pt' fill='#244D71' fill-opacity='1' stroke='none' title='SNP: rs142445519;&amp;lt;br/&amp;gt; CpG: cg12720148'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e17' cx='466.67' cy='63.15' r='1.87pt' fill='#1D405F' fill-opacity='1' stroke='none' title='SNP: rs117045061;&amp;lt;br/&amp;gt; CpG: cg09618988'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e18' cx='466.67' cy='62.49' r='1.87pt' fill='#214668' fill-opacity='1' stroke='none' title='SNP: rs117045061;&amp;lt;br/&amp;gt; CpG: cg04863665'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e19' cx='466.67' cy='54.57' r='1.87pt' fill='#234C6F' fill-opacity='1' stroke='none' title='SNP: rs117045061;&amp;lt;br/&amp;gt; CpG: cg02524833'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e20' cx='466.67' cy='50.24' r='1.87pt' fill='#56B1F7' fill-opacity='1' stroke='none' title='SNP: rs117045061;&amp;lt;br/&amp;gt; CpG: cg03070473'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e21' cx='481.26' cy='41.2' r='1.87pt' fill='#244C70' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg06491828'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e22' cx='480.69' cy='37.19' r='1.87pt' fill='#4895D2' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg04630848'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e23' cx='480.96' cy='37.19' r='1.87pt' fill='#4792CE' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg04630848'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e24' cx='481.26' cy='37.19' r='1.87pt' fill='#4996D3' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg04630848'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e25' cx='480.69' cy='37.19' r='1.87pt' fill='#4B9AD9' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg13218906'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e26' cx='480.96' cy='37.19' r='1.87pt' fill='#4998D5' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg13218906'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e27' cx='481.17' cy='37.19' r='1.87pt' fill='#458FCA' fill-opacity='1' stroke='none' title='SNP: rs6011172;&amp;lt;br/&amp;gt; CpG: cg13218906'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e28' cx='481.25' cy='37.19' r='1.87pt' fill='#4894D0' fill-opacity='1' stroke='none' title='SNP: rs62219910;&amp;lt;br/&amp;gt; CpG: cg13218906'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e29' cx='481.26' cy='37.19' r='1.87pt' fill='#4C9DDC' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg13218906'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e30' cx='480.69' cy='37.19' r='1.87pt' fill='#438AC3' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg01182084'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e31' cx='480.96' cy='37.19' r='1.87pt' fill='#4288C0' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg01182084'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e32' cx='481.25' cy='37.19' r='1.87pt' fill='#4186BE' fill-opacity='1' stroke='none' title='SNP: rs62219910;&amp;lt;br/&amp;gt; CpG: cg01182084'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e33' cx='481.26' cy='37.19' r='1.87pt' fill='#448DC6' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg01182084'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e34' cx='480.69' cy='37.19' r='1.87pt' fill='#448EC8' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg26468205'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e35' cx='480.96' cy='37.19' r='1.87pt' fill='#438BC5' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg26468205'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e36' cx='481.17' cy='37.19' r='1.87pt' fill='#4186BD' fill-opacity='1' stroke='none' title='SNP: rs6011172;&amp;lt;br/&amp;gt; CpG: cg26468205'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e37' cx='481.25' cy='37.19' r='1.87pt' fill='#4289C1' fill-opacity='1' stroke='none' title='SNP: rs62219910;&amp;lt;br/&amp;gt; CpG: cg26468205'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e38' cx='481.26' cy='37.19' r='1.87pt' fill='#4590CA' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg26468205'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e39' cx='480.69' cy='37.19' r='1.87pt' fill='#3A78AA' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg08116199'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e40' cx='480.96' cy='37.19' r='1.87pt' fill='#3977A9' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg08116199'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e41' cx='481.17' cy='37.19' r='1.87pt' fill='#3875A7' fill-opacity='1' stroke='none' title='SNP: rs6011172;&amp;lt;br/&amp;gt; CpG: cg08116199'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e42' cx='481.25' cy='37.19' r='1.87pt' fill='#3976A8' fill-opacity='1' stroke='none' title='SNP: rs62219910;&amp;lt;br/&amp;gt; CpG: cg08116199'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e43' cx='481.26' cy='37.19' r='1.87pt' fill='#3A79AB' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg08116199'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e44' cx='480.69' cy='37.18' r='1.87pt' fill='#4996D3' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg27392956'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e45' cx='480.96' cy='37.18' r='1.87pt' fill='#4793CF' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg27392956'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e46' cx='481.17' cy='37.18' r='1.87pt' fill='#438AC2' fill-opacity='1' stroke='none' title='SNP: rs6011172;&amp;lt;br/&amp;gt; CpG: cg27392956'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e47' cx='481.25' cy='37.18' r='1.87pt' fill='#4690CB' fill-opacity='1' stroke='none' title='SNP: rs62219910;&amp;lt;br/&amp;gt; CpG: cg27392956'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e48' cx='481.26' cy='37.18' r='1.87pt' fill='#4A98D6' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg27392956'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e49' cx='480.69' cy='37.18' r='1.87pt' fill='#448CC5' fill-opacity='1' stroke='none' title='SNP: rs35738769;&amp;lt;br/&amp;gt; CpG: cg04820387'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e50' cx='480.96' cy='37.18' r='1.87pt' fill='#438AC3' fill-opacity='1' stroke='none' title='SNP: rs62219894;&amp;lt;br/&amp;gt; CpG: cg04820387'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e51' cx='481.17' cy='37.18' r='1.87pt' fill='#4084BA' fill-opacity='1' stroke='none' title='SNP: rs6011172;&amp;lt;br/&amp;gt; CpG: cg04820387'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e52' cx='481.25' cy='37.18' r='1.87pt' fill='#4288C0' fill-opacity='1' stroke='none' title='SNP: rs62219910;&amp;lt;br/&amp;gt; CpG: cg04820387'/>\n   <circle id='svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_e53' cx='481.26' cy='37.18' r='1.87pt' fill='#458EC9' fill-opacity='1' stroke='none' title='SNP: rs11905704;&amp;lt;br/&amp;gt; CpG: cg04820387'/>\n  <\/g>\n  <g clip-path='url(#svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a_c1)'>\n   <text x='165.37' y='246.27' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>4e+07<\/text>\n   <text x='165.37' y='156.32' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>5e+07<\/text>\n   <text x='165.37' y='66.37' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>6e+07<\/text>\n   <text x='264.35' y='339.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>4e+07<\/text>\n   <text x='354.3' y='339.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>5e+07<\/text>\n   <text x='444.25' y='339.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>6e+07<\/text>\n   <text x='323.87' y='352.23' font-size='8.25pt' font-family='DejaVu Sans'>SNP_pos<\/text>\n   <text transform='translate(160.34,199.88) rotate(-90.00)' font-size='8.25pt' font-family='DejaVu Sans'>CpG_pos<\/text>\n   <text x='511.09' y='106.38' font-size='8.25pt' font-family='DejaVu Sans'>type<\/text>\n   <circle cx='519.73' cy='121.65' r='1.87pt' fill='#000000' fill-opacity='1' stroke='none'/>\n   <text x='533.85' y='124.86' font-size='6.6pt' font-family='DejaVu Sans'>cis<\/text>\n   <text x='511.09' y='161.37' font-size='8.25pt' font-family='DejaVu Sans'>beta<\/text>\n   <image x='511.09' y='168' width='17.28' height='86.4' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAAmElEQVQ4ja2UQRLDMAgDd3hk/tnX5agcknFaCoa0vnkMCEnGsL12GQhDYDpPwoDrpBFlRDWi/9Wu6AHC9FkLYLrzlhD3oJ3mDvRHRYy7IC8A7bCK8gpWKYDzeQVArDcDyD2YAnSofZvzaOA6Q7Oahp/dmRuVTQ0xU5TGP2o8Waool1obVuv1q8qP9xPvg633XlGLDtfIhNUBcBeA5ss0BXMAAAAASUVORK5CYII=' xmlns:xlink='http://www.w3.org/1999/xlink'/>\n   <polyline points='524.92,249.93 528.37,249.93' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='524.92,229.90 528.37,229.90' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='524.92,209.87 528.37,209.87' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='524.92,189.84 528.37,189.84' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='524.92,169.81 528.37,169.81' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='514.55,249.93 511.09,249.93' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='514.55,229.90 511.09,229.90' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='514.55,209.87 511.09,209.87' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='514.55,189.84 511.09,189.84' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='514.55,169.81 511.09,169.81' fill='none' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.37' stroke-linejoin='round' stroke-linecap='butt'/>\n   <text x='533.85' y='253.14' font-size='6.6pt' font-family='DejaVu Sans'>-0.010<\/text>\n   <text x='533.85' y='233.11' font-size='6.6pt' font-family='DejaVu Sans'>-0.005<\/text>\n   <text x='533.85' y='213.08' font-size='6.6pt' font-family='DejaVu Sans'>0.000<\/text>\n   <text x='533.85' y='193.05' font-size='6.6pt' font-family='DejaVu Sans'>0.005<\/text>\n   <text x='533.85' y='173.02' font-size='6.6pt' font-family='DejaVu Sans'>0.010<\/text>\n   <text x='199.87' y='15.1' font-size='9.9pt' font-family='DejaVu Sans'>most connected SNPs<\/text>\n  <\/g>\n <\/g>\n<\/svg>","js":null,"uid":"svg_a7e3be35_e06f_4c2f_8b52_b2a7e0e6961a","ratio":2,"settings":{"tooltip":{"css":".tooltip_SVGID_ { padding:5px;background:black;color:white;border-radius:2px;text-align:left; ; position:absolute;pointer-events:none;z-index:999;}","placement":"doc","opacity":0.9,"offx":10,"offy":10,"use_cursor_pos":true,"use_fill":false,"use_stroke":false,"delay_over":200,"delay_out":500},"hover":{"css":".hover_data_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_data_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_data_SVGID_ { fill:orange;stroke:black; }\nline.hover_data_SVGID_, polyline.hover_data_SVGID_ { fill:none;stroke:orange; }\nrect.hover_data_SVGID_, polygon.hover_data_SVGID_, path.hover_data_SVGID_ { fill:orange;stroke:none; }\nimage.hover_data_SVGID_ { stroke:orange; }","reactive":true,"nearest_distance":null},"hover_inv":{"css":""},"hover_key":{"css":".hover_key_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_key_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_key_SVGID_ { fill:orange;stroke:black; }\nline.hover_key_SVGID_, polyline.hover_key_SVGID_ { fill:none;stroke:orange; }\nrect.hover_key_SVGID_, polygon.hover_key_SVGID_, path.hover_key_SVGID_ { fill:orange;stroke:none; }\nimage.hover_key_SVGID_ { stroke:orange; }","reactive":true},"hover_theme":{"css":".hover_theme_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_theme_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_theme_SVGID_ { fill:orange;stroke:black; }\nline.hover_theme_SVGID_, polyline.hover_theme_SVGID_ { fill:none;stroke:orange; }\nrect.hover_theme_SVGID_, polygon.hover_theme_SVGID_, path.hover_theme_SVGID_ { fill:orange;stroke:none; }\nimage.hover_theme_SVGID_ { stroke:orange; }","reactive":true},"select":{"css":".select_data_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_data_SVGID_ { stroke:none;fill:red; }\ncircle.select_data_SVGID_ { fill:red;stroke:black; }\nline.select_data_SVGID_, polyline.select_data_SVGID_ { fill:none;stroke:red; }\nrect.select_data_SVGID_, polygon.select_data_SVGID_, path.select_data_SVGID_ { fill:red;stroke:none; }\nimage.select_data_SVGID_ { stroke:red; }","type":"multiple","only_shiny":true,"selected":[]},"select_inv":{"css":""},"select_key":{"css":".select_key_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_key_SVGID_ { stroke:none;fill:red; }\ncircle.select_key_SVGID_ { fill:red;stroke:black; }\nline.select_key_SVGID_, polyline.select_key_SVGID_ { fill:none;stroke:red; }\nrect.select_key_SVGID_, polygon.select_key_SVGID_, path.select_key_SVGID_ { fill:red;stroke:none; }\nimage.select_key_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"select_theme":{"css":".select_theme_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_theme_SVGID_ { stroke:none;fill:red; }\ncircle.select_theme_SVGID_ { fill:red;stroke:black; }\nline.select_theme_SVGID_, polyline.select_theme_SVGID_ { fill:none;stroke:red; }\nrect.select_theme_SVGID_, polygon.select_theme_SVGID_, path.select_theme_SVGID_ { fill:red;stroke:none; }\nimage.select_theme_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"zoom":{"min":1,"max":1,"duration":300},"toolbar":{"position":"topright","pngname":"diagram","tooltips":null,"fixed":false,"hidden":[],"delay_over":200,"delay_out":500},"sizing":{"rescale":true,"width":1}}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="tabset-2-2">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="JRomanowska_2024-08-09_files/figure-revealjs/plot_position_most_connected_cpg-1.png" style="width:110.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="results-1" class="title-slide slide level1 center">
+<h1><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zm-312 8v64c0 13.3 10.7 24 24 24s24-10.7 24-24l0-64c0-13.3-10.7-24-24-24s-24 10.7-24 24zm80-96V280c0 13.3 10.7 24 24 24s24-10.7 24-24V120c0-13.3-10.7-24-24-24s-24 10.7-24 24zm80 64v96c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path></svg> Results</h1>
+<div style="font-size: 1.2em; font-weight: bold;">
+<p><em>mQTLs in children</em></p>
+</div>
+</section>
+<section id="where-are-the-confirmed-mqtls" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M256 0c17.7 0 32 14.3 32 32V66.7C368.4 80.1 431.9 143.6 445.3 224H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H445.3C431.9 368.4 368.4 431.9 288 445.3V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.3C143.6 431.9 80.1 368.4 66.7 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H66.7C80.1 143.6 143.6 80.1 224 66.7V32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"></path></svg> Where are the confirmed mQTLs?</h2>
+<p><em>model:</em> additive</p>
+<p>296 mQTLs (out of 6175) were confirmed <em>in children</em></p>
+
+<img data-src="JRomanowska_2024-08-09_files/figure-revealjs/plot_signif_mqtls_confirmed_add_model-1.png" style="width:110.0%" alt="Only some of the cis-mQTLs found to be significant in parents were confirmed with the additive model. This plot shows that there is no clustering of those confirmed mQTLs within chromosome 20." class="r-stretch"></section>
+<section id="where-are-the-mqtls-with-interaction" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M256 0c17.7 0 32 14.3 32 32V66.7C368.4 80.1 431.9 143.6 445.3 224H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H445.3C431.9 368.4 368.4 431.9 288 445.3V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.3C143.6 431.9 80.1 368.4 66.7 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H66.7C80.1 143.6 143.6 80.1 224 66.7V32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"></path></svg> Where are the mQTLs with interaction?</h2>
+<div style="font-size: 0.8em;">
+<p><em>model:</em> interaction</p>
+<p>314 mQTLs (out of 6175) had significant interaction with ART-status <em>in children</em></p>
+</div>
+
+<img data-src="JRomanowska_2024-08-09_files/figure-revealjs/plot_signif_mqtls_confirmed_interact_model-1.png" style="width:110.0%" alt="Only some of the cis-mQTLs found to be significant in parents had significant interaction with ART-status in children. This plot shows that there is no clustering of those mQTLs within chromosome 20." class="r-stretch"></section>
+<section id="zooming-in" class="slide level2">
+<h2><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM288 176c0-44.2-35.8-80-80-80s-80 35.8-80 80c0 48.8 46.5 111.6 68.6 138.6c6 7.3 16.8 7.3 22.7 0c22.1-27 68.6-89.8 68.6-138.6zm-112 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"></path></svg> Zooming in…</h2>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Part 1</a></li><li><a href="#tabset-3-2">Part 2</a></li><li><a href="#tabset-3-3">Part 3</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/genes_and_loops_part1.png"></p>
+<figcaption>Part1</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-3-2">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/genes_and_loops_part2.png"></p>
+<figcaption>Part2</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-3-3">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figs/genes_and_loops_part3.png"></p>
+<figcaption>Part3</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section id="discussion-1" class="title-slide slide level1 center">
+<h1><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm169.8-90.7c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"></path></svg> Discussion</h1>
+<aside class="notes">
+<p>DNAmethylation depends on a lot of variables! e.g., folate supplement or vitamin supplement during pregnancy</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+
+<section>
+<section id="extra-slides" class="title-slide slide level1 center">
+<h1><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.6 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z"></path></svg> Extra slides</h1>
+
+</section>
+<section id="strongest-associations-additive-model" class="slide level2">
+<h2>‘Strongest’ associations, additive model</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>           SNP       gene   term    estimate   std.error statistic      p.value
+        &lt;char&gt;     &lt;char&gt; &lt;char&gt;       &lt;num&gt;       &lt;num&gt;     &lt;num&gt;        &lt;num&gt;
+1: rs142527558 cg10797920   SNP1  0.03434030 0.007438696  4.616441 4.187951e-06
+2:  rs79359164 cg26680502   SNP1  0.01845339 0.006365479  2.898980 3.790711e-03
+3:  rs79033469 cg00794607   SNP1 -0.01758346 0.008407823 -2.091322 3.664345e-02
+4:  rs35849074 cg26680502   SNP1  0.01739812 0.006135291  2.835745 4.624445e-03
+5: rs188100838 cg26680502   SNP1  0.01596453 0.005673459  2.813898 4.949335e-03
+6:   rs8126087 cg20937230   SNP1 -0.01574302 0.007539033 -2.088202 3.692445e-02
+       conf.low     conf.high  SNP_pos  CpG_pos
+          &lt;num&gt;         &lt;num&gt;    &lt;int&gt;    &lt;int&gt;
+1:  0.019750642  0.0489299635 61586712 62495449
+2:  0.005968599  0.0309381864 37764667 37433765
+3: -0.034073923 -0.0010930005 30953516 30143151
+4:  0.005364851  0.0294313831 37659385 37433765
+5:  0.004837043  0.0270920202 37462351 37433765
+6: -0.030529526 -0.0009565226   976128   725968</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           SNP       gene   term     estimate   std.error statistic
+        &lt;char&gt;     &lt;char&gt; &lt;char&gt;        &lt;num&gt;       &lt;num&gt;     &lt;num&gt;
+1: rs142892531 cg04446876   SNP1 -0.009995664 0.001500043 -6.663587
+2:  rs41278236 cg11145914   SNP1 -0.010154342 0.001545462 -6.570425
+3:  rs16987038 cg20606255   SNP1  0.011110467 0.001986969  5.591665
+4:  rs45555040 cg20606255   SNP1  0.011083456 0.001986446  5.579541
+5: rs144117172 cg10817792   SNP1 -0.005553789 0.001184940 -4.686979
+6: rs142527558 cg10797920   SNP1  0.034340303 0.007438696  4.616441
+        p.value     conf.low    conf.high  SNP_pos  CpG_pos
+          &lt;num&gt;        &lt;num&gt;        &lt;num&gt;    &lt;int&gt;    &lt;int&gt;
+1: 3.577903e-11 -0.012937746 -0.007053582 59699754 60630424
+2: 6.595683e-11 -0.013185485 -0.007123199 62641605 62564447
+3: 2.604532e-08  0.007213384  0.015007551 36551349 36839442
+4: 2.789096e-08  0.007187401  0.014979512 36794916 36839442
+5: 2.988150e-06 -0.007877844 -0.003229734 57292298 57004379
+6: 4.187951e-06  0.019750642  0.048929963 61586712 62495449</code></pre>
+</div>
+</div>
+</section>
+<section id="volcano-plot-additive-model" class="slide level2">
+<h2>Volcano plot, additive model</h2>
+
+<img data-src="JRomanowska_2024-08-09_files/figure-revealjs/volcano_plot_additive_model-1.png" width="960" class="r-stretch"></section>
+<section id="strongest-associations-interaction-model" class="slide level2">
+<h2>‘Strongest’ associations, interaction model</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>            SNP       gene                   term    estimate   std.error
+         &lt;char&gt;     &lt;char&gt;                 &lt;char&gt;       &lt;num&gt;       &lt;num&gt;
+ 1: rs142892531 cg04446876 SNP1:case_controlSTART  0.01944484 0.002965239
+ 2:  rs16987038 cg20606255 SNP1:case_controlSTART -0.02364613 0.003937080
+ 3:  rs45555040 cg20606255 SNP1:case_controlSTART -0.02352914 0.003936437
+ 4: rs117654917 cg12204262 SNP1:case_controlSTART  0.02264140 0.004103064
+ 5: rs144117172 cg10817792 SNP1:case_controlSTART -0.01298584 0.002358332
+ 6:  rs41278236 cg11145914 SNP1:case_controlSTART -0.01432727 0.003105520
+ 7: rs142527558 cg10797920 SNP1:case_controlSTART -0.06688452 0.014945962
+ 8: rs117226334 cg19122601 SNP1:case_controlSTART  0.01394780 0.003153570
+ 9: rs117696074 cg09453598 SNP1:case_controlSTART  0.01940239 0.004410773
+10: rs182484229 cg06448079 SNP1:case_controlSTART  0.01415210 0.003286212
+    statistic      p.value     conf.low    conf.high  SNP_pos  CpG_pos
+        &lt;num&gt;        &lt;num&gt;        &lt;num&gt;        &lt;num&gt;    &lt;int&gt;    &lt;int&gt;
+ 1:  6.557597 7.194759e-11  0.013629022  0.025260666 59699754 60630424
+ 2: -6.006009 2.307551e-09 -0.031368012 -0.015924256 36551349 36839442
+ 3: -5.977269 2.743626e-09 -0.031249754 -0.015808525 36794916 36839442
+ 4:  5.518168 3.939374e-08  0.014593963  0.030688837  2106677  1249928
+ 5: -5.506367 4.209472e-08 -0.017611304 -0.008360381 57292298 57004379
+ 6: -4.613485 4.247084e-06 -0.020418188 -0.008236356 62641605 62564447
+ 7: -4.475089 8.130124e-06 -0.096198338 -0.037570694 61586712 62495449
+ 8:  4.422859 1.034044e-05  0.007762630  0.020132964 55517482 56254598
+ 9:  4.398864 1.154167e-05  0.010751414  0.028053370 38891003 39288278
+10:  4.306509 1.750905e-05  0.007706764  0.020597434 57327746 57565177</code></pre>
+</div>
+</div>
+<div class="quarto-auto-generated-content">
+<p><img src="figs/UiBmerke_grayscaleV8_black_transp.png" class="slide-logo"></p>
+<div class="footer footer-default">
+
+</div>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="JRomanowska_2024-08-09_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
