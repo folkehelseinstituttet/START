@@ -3,6 +3,8 @@ Analysis of DNA methylation in ART trios
 
 ## Presentations:
 
+- _Julia Romanowska_, [ART and mQTLs - Can assisted reproductive technologies (ART) impact the association between DNA methylation and genotypes?](JRomanowska_Presentation_2026-05-22/JRomanowska_START_meeting_2026-05-22.html) (22.05.2026, START meeting online)
+
 - _Julia Romanowska_, [mQTLs in ART - parents vs children](Presentation_2024-08-09/JRomanowska_2024-08-09.html) (09.08.2024, START meeting online)
 
 - _Julia Romanowska_, [X-chromosome EWAS - what we found this far](Presentation_07-01-2022/JRom_Xchrom_presentation_2022-01-07.html) (07.01.2021, START meeting online)

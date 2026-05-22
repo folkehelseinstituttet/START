@@ -1,0 +1,16 @@
+.center-box{
+  margin-inline: auto;
+  max-width: fit-content;
+}
+.reveal .slide-logo {
+  height: 100px !important;
+  width: 100px !important;
+  max-width: unset !important;
+  max-height: unset !important;
+}
+.left-column-title-slide{
+  max-width: 60%;
+  position: absolute;
+  left: 20px;
+  color: #3F3F3F;
+}
